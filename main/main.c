@@ -30,7 +30,7 @@ static bool is_peak(uint16_t arr[], int n, uint16_t num, int i, int j)
     if(i>=0 && arr[i] > num)
         return false;
     if(j<n && arr[j] > num)
-        return true;
+        return false;
     return true;
 }
 
@@ -39,43 +39,53 @@ static bool is_trough(uint16_t arr[], int n, uint16_t num, int i, int j)
     if(i>=0 && arr[i] < num)
         return false;
     if(j<n && arr[j] < num)
-        return true;
+        return false;
     return true;
 }
 
-static int calc_hr(uint16_t arr[], int n)
-{
-    float hr = 0;
-    float tr = 0;
-    float bpm = 0;
 
-    int min = arr[0];
-    int max = arr[0];
+static double calc_hr(uint16_t arr[], int n)
+{
+    double pk = 0.0;
+    double tr = 0.0;
+    double bpm = 0.0;
+    double spo2 = 0.0;
+    double base = 0.0;
+    double peak = 0.0;
+    double base_avg = 0.0;
+    double peak_avg = 0.0;
+    
+    double min = arr[0];
+    double max = arr[0];
 
     for(int i = 0; i<n; i++)
     {
-        if(min>arr[i])
-        {
-            min = arr[i];
-        }
-        if(max<arr[i])
+        if(max>arr[i])//&& arr[i]<500 && arr[i]>100)
         {
             max = arr[i];
         }
+        if(min<arr[i]) //&& arr[i]<500 && arr[i]>100)
+        {
+            min = arr[i];
+        }
         if(is_peak(arr, n, arr[i], i-1, i+1))
         {
-            hr++;
+            pk++;
+            peak_avg = peak_avg + arr[i];
+            
         }
         if(is_trough(arr, n, arr[i], i-1, i+1))
         {
             tr++;
+            base_avg = base_avg + arr[i];
         }
     }
-    bpm = (hr/100) * 6;
-    printf("BPM = %d\n", (uint16_t)bpm);
-    printf("Min = %d\n", (uint16_t)min);
-    printf("Max = %d\n", (uint16_t)max);
-    return bpm;
+    bpm = (pk/100) * 6;
+    peak = peak_avg/pk;
+    base = base_avg/tr;
+    spo2 = peak/base;
+    printf("BPM = %d\n", (uint16_t)bpm);//%d\nAC = %d\nDC = %d\nSPO2 = %d\nHR = %d\n", (uint16_t)bpm, (uint16_t)max, (uint16_t)min, (uint16_t)spo2, (uint16_t)hr);
+    return spo2;
 }
 
 static void gpio_task(void *arg)
@@ -92,6 +102,10 @@ static void i2c_task(void *arg)
 {
     uint16_t data;
     esp_err_t ret;
+    double red_spo2 = 0.0;
+    double ir_spo2 = 0.0;
+    double spo2 = 0.0;
+    double r = 0.0;
 
     ret  = i2c_master_ads1115_init(I2C_MASTER_NUM);
 
@@ -111,25 +125,29 @@ static void i2c_task(void *arg)
         {
             if(n%2)
             {
-                red_data[i]=(uint16_t)data;
-                printf("%d\n", (uint16_t)red_data[i]);
+                ir_data[i]=(uint16_t)data;
+                // printf("%d\n", (uint16_t)data);
                 i++;
                 n++;
             }
             else
             {
-                ir_data[j]=(uint16_t)data;
-                printf("%d\n", (uint16_t)ir_data[i]);
+                red_data[j]=(uint16_t)data;
+                // printf("%d\n", (uint16_t)data);
                 j++;
                 n++;
             }
             vTaskDelay(SAMPLES_MS / portTICK_PERIOD_MS);
             if(i == MAX_VALS)
             {
-                printf("IR LED Data: \n");
-                calc_hr(ir_data, sizeof(ir_data));
+                printf("\n------------------------------------------------------\n");
                 printf("Red LED Data: \n");
-                calc_hr(red_data, sizeof(red_data));
+                red_spo2 = calc_hr(red_data, sizeof(red_data));
+                printf("IR LED Data: \n");
+                ir_spo2 = calc_hr(ir_data, sizeof(ir_data));
+                r = red_spo2/ir_spo2;
+                spo2 = (4.23 - r)/0.038;
+                printf("SPO2 = %d\n", (uint16_t)spo2);
                 vTaskDelete(NULL);
             }
         }
