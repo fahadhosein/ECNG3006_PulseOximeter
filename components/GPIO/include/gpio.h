@@ -14,28 +14,14 @@
 #include "esp_log.h"
 #include "esp_system.h"
 
-static const *TAG_GPIO = "gpio";
+static const char *TAG_GPIO = "gpio";
 
-#define GPIO_OUTPUT_IO  2
+#define GPIO_OUTPUT_IO  3
 
-gpio_config_t io_conf;
+esp_err_t gpio_init();
 
-// GPIO OUTPUT Configuration
-io_conf.intr_type = GPIO_INTR_DISABLE;      // disable interrupt
-io_conf.mode = GPIO_MODE_OUTPUT;            // set as output mode
-io_conf.pin_bit_mask = (1ULL << GPIO_OUTPUT_IO); // bit mask of the pins that you want to set,e.g.GPIO15/16
-io_conf.pull_down_en = 0;                   // disable pull-down mode
-io_conf.pull_up_en = 0;                     // disable pull-up mode
-gpio_config(&io_conf);                      // configure GPIO with the given settings
+void gpio_on(int *delay);
 
-// GPIO INPUT Configuration
-io_conf.intr_type = GPIO_INTR_NEGEDGE;      // interrupt of rising edge
-io_conf.pin_bit_mask = (1ULL << GPIO_INPUT_IO);  // bit mask of the pins, use GPIO4/5 here
-io_conf.mode = GPIO_MODE_INPUT;             // set as input mode
-io_conf.pull_up_en = 0;                     // disable pull-up mode
-gpio_config(&io_conf);
-
-// Change gpio intrrupt type for one pin
-gpio_set_intr_type(GPIO_INPUT_IO, GPIO_INTR_NEGEDGE);
+void gpio_off(int *delay);
 
 #endif

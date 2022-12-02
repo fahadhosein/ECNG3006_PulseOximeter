@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/CMakeFiles/bootloader
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/CMakeFiles/bootloader.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/CMakeFiles/bootloader-complete.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/fahad/esp/workspace/ECNG3006_PulseOximeter/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
