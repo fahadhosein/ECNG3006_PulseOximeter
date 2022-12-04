@@ -60,11 +60,11 @@ static double calc_hr(uint16_t arr[], int n)
 
     for(int i = 0; i<n; i++)
     {
-        if(max>arr[i])//&& arr[i]<500 && arr[i]>100)
+        if(max>arr[i])
         {
             max = arr[i];
         }
-        if(min<arr[i]) //&& arr[i]<500 && arr[i]>100)
+        if(min<arr[i])
         {
             min = arr[i];
         }
@@ -84,7 +84,7 @@ static double calc_hr(uint16_t arr[], int n)
     peak = peak_avg/pk;
     base = base_avg/tr;
     spo2 = peak/base;
-    printf("BPM = %d\n", (uint16_t)bpm);//%d\nAC = %d\nDC = %d\nSPO2 = %d\nHR = %d\n", (uint16_t)bpm, (uint16_t)max, (uint16_t)min, (uint16_t)spo2, (uint16_t)hr);
+    printf("BPM = %d\n", (uint16_t)bpm);
     return spo2;
 }
 
