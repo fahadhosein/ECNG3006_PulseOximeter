@@ -7,16 +7,15 @@ import serial
 from time import sleep
 from time import time
 
-#initialize serial port
 sleep(1)
 ser = serial.Serial()
-ser.port = '/dev/ttyUSB0' #Arduino serial port
+ser.port = '/dev/ttyUSB0'
 ser.baudrate = 74880
-ser.timeout = 10 #specify timeout when using readline()
+ser.timeout = 10
 ser.open()
 if ser.is_open==True:
-	print("\nAll right, serial port now open. Configuration:\n")
-	print(ser, "\n") #print serial parameters
+	print("\nSerial Port Initialised:\n Configuration:")
+	print(ser, "\n")
 datalist = []
 
 tmr = 15
